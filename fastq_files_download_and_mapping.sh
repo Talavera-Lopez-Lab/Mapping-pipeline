@@ -10,7 +10,7 @@ STAR_CMD="/home/amaguza/STAR-2.7.11a/source/STAR"
 WL=/home/amaguza/data/10X_Genomics_whitelists/737K-arc-v1.txt
 
 # File suffixes
-suffixes=("S1_L001_I2_001.fastq.gz" "S1_L001_I1_001.fastq.gz" "S1_L001_R1_001.fastq.gz" "S1_L001_R2_001.fastq.gz")
+suffixes=("S1_L001_R1_001.fastq.gz" "S1_L001_R2_001.fastq.gz")
 
 
 # Read sample and accession from the file
@@ -31,14 +31,14 @@ awk '{print $1,$2}' sample_accessions.txt | while read -r sample accession; do
     axel -n $CPU --output="${sample}_${suffix}" "$file_url"
 
         # Unzip the files
-    gunzip "${sample}_${suffix}"
+    #gunzip "${sample}_${suffix}"
 
   done
   
   # Mapping the fastq files to the genome
   $STAR_CMD --runThreadN 40 \
             --genomeDir $STAR_INDEX \
-            --readFilesIn "${sample}_S1_L001_R1_001.fastq" "${sample}_S1_L001_R2_001.fastq" \
+            --readFilesIn <(gunzip -c "${sample}_S1_L001_R1_001.fastq.gz") <(gunzip -c "${sample}_S1_L001_R2_001.fastq.gz") \
             --runDirPerm All_RWX GZIP --soloBarcodeMate 1 --clip5pNbases 28 0 --soloType CB_UMI_Simple \
             --soloCBwhitelist $WL \
             --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 12 --soloStrand Forward \
@@ -48,7 +48,7 @@ awk '{print $1,$2}' sample_accessions.txt | while read -r sample accession; do
             --soloMultiMappers EM --outReadsUnmapped Fastx
   
   # Delete the initial fastq files
-  rm "${sample}_S1_L001_R1_001.fastq.gz" "${sample}_S1_L001_R2_001.fastq.gz"
+  rm *.fastq *.fastq.gz
   
   # Change back to the parent directory
   cd "$BASE_DIR"
