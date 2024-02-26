@@ -1,25 +1,43 @@
-#!/bin/bash
+#!/bin/bash -x
 
-# Declare an associative array with run accessions as keys and sample names as values
-declare -A samples
-samples=(
-  ["ERR11403589"]="HCAHeart9508627"
-  ["ERR11403590"]="HCAHeart9508628"
-  ["ERR11403591"]="HCAHeart9508629"
-  #... add other samples as needed
-)
+####SET UP WORKING ENVIRONMENT
 
-# Base URL
+CPU=16
+STAR_INDEX=/home/amaguza/data/human_reference_genome/index_file_STAR
+BASE_DIR="/home/amaguza/data/test_heart_data/GEX"
+STAR_CMD="/home/amaguza/STAR-2.7.11a/source/STAR"
 base_url="ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR114"
+
+#### DOWNLOAD SAMPLES AND MAP THEM WITH STAR TO GENCODE GRCH38
+
+for i in $(cat samples.txt)
+
+do
+
+mkdir $i
+
+cd $i
+
+axel -n $CPU -a ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR114/ERR11403590/HCAHeart9508628_S1_L001_I1_001.fastq.gz
+
+
+
+
+
+
+
+
+
+
 
 # File suffixes
 suffixes=("S1_L001_I2_001.fastq.gz" "S1_L001_I1_001.fastq.gz" "S1_L001_R1_001.fastq.gz" "S1_L001_R2_001.fastq.gz")
 
-# Base directory
-BASE_DIR="/home/amaguza/data/test_heart_data/GEX"
 
-# Mapping command
-STAR_CMD="/home/amaguza/STAR-2.7.11a/source/STAR"
+
+
+
+
 
 # Iterate over the associative array
 for accession in "${!samples[@]}"; do
@@ -45,7 +63,7 @@ for accession in "${!samples[@]}"; do
   
   # Mapping the fastq files to the genome
   $STAR_CMD --runThreadN 40 \
-            --genomeDir /home/amaguza/data/human_reference_genome/index_file_STAR \
+            --genomeDir $STAR_INDEX \
             --readFilesIn "$sample_name_S1_L001_R1_001.fastq" "$sample_name_S1_L001_R2_001.fastq" \
             --runDirPerm All_RWX GZIP --soloBarcodeMate 1 --clip5pNbases 28 0 --soloType CB_UMI_Simple \
             --soloCBwhitelist /home/amaguza/data/10X_Genomics_whitelists/737K-arc-v1.txt \
