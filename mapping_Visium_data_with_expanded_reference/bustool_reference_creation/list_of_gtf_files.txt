@@ -1,0 +1,4 @@
+/mnt/LaCIE/annaM/human_reference_genome/files_from_genecode/gencode.v45.chr_patch_hapl_scaff.annotation.gtf
+/mnt/LaCIE/annaM/human_reference_genome/files_from_genecode/gencode.v45.long_noncoding_RNAs.gtf
+/mnt/LaCIE/annaM/human_reference_genome/files_from_genecode/gencode.v45.polyAs.gtf
+/mnt/LaCIE/annaM/human_reference_genome/files_from_genecode/gencode.v45.tRNAs.gtf
